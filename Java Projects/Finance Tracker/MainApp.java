@@ -1,38 +1,82 @@
-package com.example;
-
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
 
-import java.io.IOException;
+import java.util.List;
 
-/**
- * JavaFX App
- */
-public class App extends Application {
+public class MainApp extends Application {
 
-    private static Scene scene;
+    private ObservableList<Transaction> transactions;
 
     @Override
-    public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
-        stage.setScene(scene);
+    public void start(Stage stage) {
+
+        transactions = FXCollections.observableArrayList();
+
+        List<Transaction> loaded = FileManager.load();
+        if (loaded != null) {
+            transactions.addAll(loaded);
+        }
+
+        TableView<Transaction> table = new TableView<>(transactions);
+
+        TableColumn<Transaction, String> dateCol = new TableColumn<>("Date");
+        dateCol.setCellValueFactory(d ->
+                new javafx.beans.property.SimpleStringProperty(
+                        d.getValue().getDate().toString()
+                )
+        );
+
+        TableColumn<Transaction, String> descCol = new TableColumn<>("Description");
+        descCol.setCellValueFactory(d ->
+                new javafx.beans.property.SimpleStringProperty(
+                        d.getValue().getDescription()
+                )
+        );
+
+        TableColumn<Transaction, String> catCol = new TableColumn<>("Category");
+        catCol.setCellValueFactory(d ->
+                new javafx.beans.property.SimpleStringProperty(
+                        d.getValue().getCategory()
+                )
+        );
+
+        TableColumn<Transaction, String> amtCol = new TableColumn<>("Amount");
+        amtCol.setCellValueFactory(d ->
+                new javafx.beans.property.SimpleStringProperty(
+                        String.format("%.2f", d.getValue().getAmount())
+                )
+        );
+
+        table.getColumns().addAll(dateCol, descCol, catCol, amtCol);
+
+        Button addBtn = new Button("Add");
+        addBtn.setOnAction(e -> {
+            Transaction t = TransactionDialog.showAndWait();
+            if (t != null) {
+                transactions.add(t);
+            }
+        });
+
+        BorderPane root = new BorderPane();
+        root.setCenter(table);
+        root.setBottom(new HBox(10, addBtn));
+        BorderPane.setMargin(root.getBottom(), new Insets(10));
+
+        stage.setScene(new Scene(root, 700, 400));
+        stage.setTitle("Personal Finance Manager");
+
+        stage.setOnCloseRequest(e -> FileManager.save(transactions));
+
         stage.show();
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
-    }
-
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
-    }
-
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
-
 }
