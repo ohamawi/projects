@@ -7,10 +7,10 @@ public class Transaction implements Serializable {
 
     private LocalDate date;
     private String description;
-    private String category;
+    private Category category;
     private double amount;
 
-    public Transaction(LocalDate date, String description, String category, double amount) {
+    public Transaction(LocalDate date, String description, Category category, double amount) {
         this.date = date;
         this.description = description;
         this.category = category;
@@ -25,11 +25,15 @@ public class Transaction implements Serializable {
         return description;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
     public double getAmount() {
         return amount;
+    }
+
+    public boolean isIncome() {
+        return category.isIncome();
     }
 }
