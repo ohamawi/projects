@@ -14,13 +14,12 @@ public class TransactionDialog {
         stage.initModality(Modality.APPLICATION_MODAL);
 
         DatePicker datePicker = new DatePicker(LocalDate.now());
+
         TextField descriptionField = new TextField();
         descriptionField.setPromptText("Description");
 
-        ComboBox<String> categoryBox = new ComboBox<>();
-        categoryBox.getItems().addAll(
-                "Food", "Rent", "Utilities", "Entertainment", "Income"
-        );
+        ComboBox<Category> categoryBox = new ComboBox<>();
+        categoryBox.getItems().addAll(Category.values());
         categoryBox.getSelectionModel().selectFirst();
 
         TextField amountField = new TextField();
@@ -34,6 +33,7 @@ public class TransactionDialog {
         saveBtn.setOnAction(e -> {
             try {
                 double amount = Double.parseDouble(amountField.getText());
+
                 result[0] = new Transaction(
                         datePicker.getValue(),
                         descriptionField.getText(),
@@ -41,6 +41,7 @@ public class TransactionDialog {
                         amount
                 );
                 stage.close();
+
             } catch (NumberFormatException ex) {
                 new Alert(Alert.AlertType.ERROR, "Invalid amount").showAndWait();
             }
@@ -48,19 +49,22 @@ public class TransactionDialog {
 
         cancelBtn.setOnAction(e -> stage.close());
 
+        HBox buttonBox = new HBox(10, saveBtn, cancelBtn);
+
         VBox layout = new VBox(10,
                 datePicker,
                 descriptionField,
                 categoryBox,
                 amountField,
-                new HBox(10, saveBtn, cancelBtn)
+                buttonBox
         );
         layout.setPadding(new Insets(10));
 
-        stage.setScene(new Scene(layout, 300, 250));
+        stage.setScene(new Scene(layout, 300, 260));
         stage.setTitle("Add Transaction");
         stage.showAndWait();
 
         return result[0];
     }
 }
+
