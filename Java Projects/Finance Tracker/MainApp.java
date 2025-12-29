@@ -16,13 +16,14 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
 
+        // ===== Load Data =====
         transactions = FXCollections.observableArrayList();
-
         List<Transaction> loaded = FileManager.load();
         if (loaded != null) {
             transactions.addAll(loaded);
         }
 
+        // ===== Table =====
         TableView<Transaction> table = new TableView<>(transactions);
 
         TableColumn<Transaction, String> dateCol = new TableColumn<>("Date");
@@ -42,7 +43,7 @@ public class MainApp extends Application {
         TableColumn<Transaction, String> catCol = new TableColumn<>("Category");
         catCol.setCellValueFactory(d ->
                 new javafx.beans.property.SimpleStringProperty(
-                        d.getValue().getCategory()
+                        d.getValue().getCategory().getDisplayName()
                 )
         );
 
@@ -54,8 +55,12 @@ public class MainApp extends Application {
         );
 
         table.getColumns().addAll(dateCol, descCol, catCol, amtCol);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
+        // ===== Buttons =====
         Button addBtn = new Button("Add");
+        Button deleteBtn = new Button("Delete");
+
         addBtn.setOnAction(e -> {
             Transaction t = TransactionDialog.showAndWait();
             if (t != null) {
@@ -63,14 +68,26 @@ public class MainApp extends Application {
             }
         });
 
+        deleteBtn.setOnAction(e -> {
+            Transaction selected = table.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                transactions.remove(selected);
+            }
+        });
+
+        HBox buttonBox = new HBox(10, addBtn, deleteBtn);
+        buttonBox.setPadding(new Insets(10));
+
+        // ===== Layout =====
         BorderPane root = new BorderPane();
         root.setCenter(table);
-        root.setBottom(new HBox(10, addBtn));
-        BorderPane.setMargin(root.getBottom(), new Insets(10));
+        root.setBottom(buttonBox);
 
-        stage.setScene(new Scene(root, 700, 400));
+        // ===== Scene =====
+        stage.setScene(new Scene(root, 750, 450));
         stage.setTitle("Personal Finance Manager");
 
+        // ===== Save on Exit =====
         stage.setOnCloseRequest(e -> FileManager.save(transactions));
 
         stage.show();
