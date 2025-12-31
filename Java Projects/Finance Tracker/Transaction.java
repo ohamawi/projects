@@ -1,3 +1,5 @@
+package com.example;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -7,10 +9,10 @@ public class Transaction implements Serializable {
 
     private LocalDate date;
     private String description;
-    private Category category;
+    private String category;
     private double amount;
 
-    public Transaction(LocalDate date, String description, Category category, double amount) {
+    public Transaction(LocalDate date, String description, String category, double amount) {
         this.date = date;
         this.description = description;
         this.category = category;
@@ -25,15 +27,11 @@ public class Transaction implements Serializable {
         return description;
     }
 
-    public Category getCategory() {
+    public String getCategory() {
         return category;
     }
 
     public double getAmount() {
         return amount;
-    }
-
-    public boolean isIncome() {
-        return category.isIncome();
     }
 }

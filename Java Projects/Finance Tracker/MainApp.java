@@ -1,3 +1,5 @@
+package com.example;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,14 +18,14 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
 
-        // ===== Load Data =====
+        // Load transactions
         transactions = FXCollections.observableArrayList();
         List<Transaction> loaded = FileManager.load();
         if (loaded != null) {
             transactions.addAll(loaded);
         }
 
-        // ===== Table =====
+        // Table
         TableView<Transaction> table = new TableView<>(transactions);
 
         TableColumn<Transaction, String> dateCol = new TableColumn<>("Date");
@@ -57,7 +59,7 @@ public class MainApp extends Application {
         table.getColumns().addAll(dateCol, descCol, catCol, amtCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        // ===== Buttons =====
+        // Buttons
         Button addBtn = new Button("Add");
         Button deleteBtn = new Button("Delete");
 
@@ -78,16 +80,18 @@ public class MainApp extends Application {
         HBox buttonBox = new HBox(10, addBtn, deleteBtn);
         buttonBox.setPadding(new Insets(10));
 
-        // ===== Layout =====
+        // Summary
+        SummaryPane summaryPane = new SummaryPane(transactions);
+
+        // Layout
         BorderPane root = new BorderPane();
+        root.setTop(summaryPane);
         root.setCenter(table);
         root.setBottom(buttonBox);
 
-        // ===== Scene =====
-        stage.setScene(new Scene(root, 750, 450));
+        stage.setScene(new Scene(root, 800, 500));
         stage.setTitle("Personal Finance Manager");
 
-        // ===== Save on Exit =====
         stage.setOnCloseRequest(e -> FileManager.save(transactions));
 
         stage.show();

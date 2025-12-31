@@ -1,11 +1,13 @@
+package com.example;
+
 public enum Category {
 
-    // Income
+    // Income categories
     SALARY("Salary", true),
     FREELANCE("Freelance", true),
     OTHER_INCOME("Other Income", true),
 
-    // Expenses
+    // Expense categories
     FOOD("Food", false),
     RENT("Rent", false),
     UTILITIES("Utilities", false),

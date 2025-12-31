@@ -1,3 +1,5 @@
+package com.example;
+
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -34,8 +36,13 @@ public class TransactionDialog {
             try {
                 double amount = Double.parseDouble(amountField.getText());
 
+                LocalDate date = datePicker.getValue();
+                if (date == null) {
+                    date = LocalDate.now();
+                }
+
                 result[0] = new Transaction(
-                        datePicker.getValue(),
+                        date,
                         descriptionField.getText(),
                         categoryBox.getValue(),
                         amount
@@ -49,14 +56,12 @@ public class TransactionDialog {
 
         cancelBtn.setOnAction(e -> stage.close());
 
-        HBox buttonBox = new HBox(10, saveBtn, cancelBtn);
-
         VBox layout = new VBox(10,
                 datePicker,
                 descriptionField,
                 categoryBox,
                 amountField,
-                buttonBox
+                new HBox(10, saveBtn, cancelBtn)
         );
         layout.setPadding(new Insets(10));
 
@@ -67,4 +72,3 @@ public class TransactionDialog {
         return result[0];
     }
 }
-
