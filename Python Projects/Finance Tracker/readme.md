@@ -9,3 +9,11 @@ UX
 and UI
 
 WIth all of these factors calculated, I can see which different languages I prefer and get a feel for using TKinter for more involved, unique projects as time passes.
+
+Features yet to add:
+
+Editing transactions
+
+Date picker
+
+Dark mode
