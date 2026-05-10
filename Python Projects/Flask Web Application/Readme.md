@@ -8,8 +8,10 @@ Current Implementations in progress:
 
 Finance Tracker:
 
-  The ability to create and edit transactions and incomes
+  The ability to create and edit transactions and incomes [COMPLETE]
   
-  The ability to choose the dates of a transaction instead of the current date being automatically the only one available
+  The ability to choose the dates of a transaction instead of the current date being automatically the only one available [COMPLETE]
   
-  The ability to save unique entries for the user, which would allow several users on the platform at once
+  The ability to save unique entries for the user, which would allow several users on the platform at once [COMPLETE]
+
+Journal
